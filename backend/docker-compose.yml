@@ -1,0 +1,40 @@
+services:
+  db:
+    container_name: betting_svc_db
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pass
+      POSTGRES_DB: betting
+    ports:
+      - '5434:5432'
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api:
+    container_name: betting_svc_api
+    image: betting_api
+    ports:
+      - '3000:3000'
+    build:
+      dockerfile: Dockerfile
+    volumes:
+      - ./data:/app/data
+      - ./.env:/app/.env
+    environment:
+      DB_CONNECTION_URL: postgres://user:pass@db:5432/betting
+    depends_on:
+      db:
+        condition: service_healthy
+        restart: true
+    env_file: .env
+
+networks:
+  default:
+    name: betting_net
