@@ -32,7 +32,7 @@ Additionally, six sports events are seeded into the database, including matches 
 1. **Clone the Repository**:
 
   ```sh
-  git clone https://github.com/repo.git
+  git clone https://github.com/Arihtev/betting-app.git
   cd frontend
   ```
 
